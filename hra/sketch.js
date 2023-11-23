@@ -16,9 +16,11 @@ function setup() {
     // na náhodné pozici, ale vždycky stejně daleko od hráče
     const r = min(width, height)/2 * 0.75;
     const a = random(2*PI);
-    enemy = createVector(r*cos(a), r*sin(a));
-    enemy.add(player);
+    var enemyPos = createVector(r*cos(a), r*sin(a));
+    enemyPos.add(player);
     //
+
+    enemy = new Enemy(enemyPos)
 }
 
 function draw() {
@@ -32,9 +34,12 @@ function draw() {
     dir.setMag(playerSpeed);
     player.add(dir);
 
-    fill(255);
+    enemy.update()
+
+    fill(122, 0, 122);
+    stroke(150, 0, 0);
+    strokeWeight(3)
     circle(player.x, player.y, playerSize);
 
-    fill(255, 0, 0);
-    circle(enemy.x, enemy.y, enemySize);
+    enemy.draw()
 }
