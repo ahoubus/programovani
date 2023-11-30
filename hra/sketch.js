@@ -5,26 +5,44 @@ const enemySize = 30;
 
 var player;
 
-var enemy;
+var enemies = [];
+
+var lastMouse = false;
 
 function setup() {
     createCanvas(800, 600);
 
-    player = createVector(width / 2, height / 2);
-    
-    // Tomuhle nemusíte rozumět, je to jenom aby byl nepřítel
-    // na náhodné pozici, ale vždycky stejně daleko od hráče
-    const r = min(width, height)/2 * 0.75;
-    const a = random(2*PI);
-    var enemyPos = createVector(r*cos(a), r*sin(a));
-    enemyPos.add(player);
-    //
+    player = createVector(width / 2, height / 2)
 
-    enemy = new Enemy(enemyPos)
+    for (var i = 0; i < 10; i++){
+        var randomPos = createVector(random(width), random(height));
+        var enemy = new Enemy(randomPos);
+        enemies.push(enemy);
+    }
 }
 
 function draw() {
     background(220);
+
+    const mouse = createVector(mouseX, mouseY)
+    const ird = p5.Vector.sub(mouse, player)
+    ird.setMag(60)
+    const lineend = p5.Vector.add(player, ird)
+
+    for (const enemy of enemies) {
+        if (p5.Vector.dist(player, enemy.pos) < playerSize/2 + enemySize/2) {
+            player.x = random(width);
+            player.y = random(height);
+        }
+        
+    }
+
+    // if (enemy.pos.x-enemySize/2 < player.x+playerSize/2 &&
+    //     enemy.pos.x+enemySize/2 > player.x-playerSize/2 &&
+    //     enemy.pos.y-enemySize/2 < player.y+playerSize/2 &&
+    //     enemy.pos.y+enemySize/2 > player.y-playerSize/2) {
+    //    x
+    // }
 
     var dir = createVector();
     if (Input.keyPressed('a')) dir.x -= 1;
@@ -34,12 +52,34 @@ function draw() {
     dir.setMag(playerSpeed);
     player.add(dir);
 
-    enemy.update()
+    for (var enemy of enemies)
+        enemy.update();
 
     fill(122, 0, 122);
     stroke(150, 0, 0);
     strokeWeight(3)
     circle(player.x, player.y, playerSize);
 
-    enemy.draw()
+    for (var enemy of enemies)
+        enemy.draw();
+
+    if (player.x > width) {
+        player.x = 0
+    }    
+    if (player.y > height) {
+        player.y = 0
+    }
+    if (player.x < 0) {
+        player.x = width
+    }
+    if (player.y < 0) {
+        player.y = height
+    }
+
+    if (mouseIsPressed && !lastMouse) {
+        line(player.x, player.y, lineend.x, lineend.y)
+        // mouseIsPressed = false
+    }
+
+    lastMouse = mouseIsPressed;
 }
