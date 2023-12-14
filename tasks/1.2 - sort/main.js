@@ -6,6 +6,19 @@ function setup() {
     print(`Sorted: ${mySort(randomList)}`);
 }
 
+function findMin(list) {
+
+    let min = 100
+    for(let i = 0; i < list.length; i++) {
+        let x = list[i]
+
+        if (x < min)
+            min = x
+    }
+
+    return min
+}
+
 // Doplňtě funkci mySort, aby vrátila setřízený seznam (od nejmenšího po největší)
 // Užitečné funkce:
 //      list.indexOf(x) - vrátí index položky x (na kolikáté pozici se v seznamu nachází)
@@ -17,6 +30,7 @@ function setup() {
 // Tip - můžete vždy najít nejmenší číslo v seznamu, smazat ho a přidat ho do nového seznamu,
 // nový seznam bude potom obsahovat stejná čísla jako původní, ale ve správněm pořadí
 function mySort(list) {
+
     return list
 }
 
