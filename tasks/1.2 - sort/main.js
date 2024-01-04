@@ -30,8 +30,17 @@ function findMin(list) {
 // Tip - můžete vždy najít nejmenší číslo v seznamu, smazat ho a přidat ho do nového seznamu,
 // nový seznam bude potom obsahovat stejná čísla jako původní, ale ve správněm pořadí
 function mySort(list) {
-
-    return list
+    let sorted = []
+           
+    while (list.length > 0){
+        let min = findMin(list)
+        sorted.push(min)
+        let index = list.indexOf(min)
+        list.splice(index, 1)
+        
+    }
+    print(list)
+    return sorted
 }
 
 

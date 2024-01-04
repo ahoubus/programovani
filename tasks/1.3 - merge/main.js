@@ -13,7 +13,18 @@ function setup() {
 function merge(listA, listB) {
     let out = [];
 
-    
+    let i = 0
+    let j = 0
+
+    while (true) {
+        if (listA[i] < listB[j]) {
+            out.push(listA[i])
+        
+        }
+
+        break
+    }
+
 
     return out;
 }
