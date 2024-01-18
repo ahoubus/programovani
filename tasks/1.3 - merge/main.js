@@ -19,7 +19,12 @@ function merge(listA, listB) {
     while (true) {
         if (listA[i] < listB[j]) {
             out.push(listA[i])
-        
+        }
+        if (listB[i] < listA[j]) {
+            out.push(listB[j])
+        }
+        if (listA[i] = listB[j]) {
+            out.push(listA[i])
         }
 
         break
