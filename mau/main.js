@@ -73,8 +73,7 @@ function draw() {
     for (let circle of circlez) circle.update();
     for (let circle of circlez) circle.draw();
 
-    keyCode = 32
-    if (keyIsPressed) {
+    if (keyIsPressed && keyCode == 32) {
         gravity.y = -0.5
     }    
     if (gravity.y == -0.5){
