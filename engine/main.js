@@ -21,7 +21,7 @@ class Player extends Component{
 }
 
 function setup() {
-    createCanvas(400, 400);
+    size(400, 400);
     background(51);
 
     new GameObject(width / 2, height)
