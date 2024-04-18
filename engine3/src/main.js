@@ -8,38 +8,15 @@ class Player extends Component{
     grounded = false;
 
     start() {
-        let collider = this.getComponent(Rigidbody);
-
-        collider.onCollisionEnter = col => {
-
-            if (col.hit.normal.y == -1) {
-
-                if (col.collider.getComponent(Enemy)) {
-                    console.log("x");
-                    collider.vel.y = -10*60;
-
-                    col.collider.gameObject.destroy();
-                    return;
-                }
-
-                this.grounded = true;
-            }
-        }
-
-        collider.onCollisionExit = col => {
-            if (col.hit.normal.y == -1) {
-                this.grounded = false;
-            }
-        }
+        this.collider = this.getComponent(Rigidbody);
     }
 
     update() {
-        let collider = this.getComponent(Rigidbody);
 
         if (this.gameObject.pos.y >= killBox.pos.y) {
             this.gameObject.pos.x = width/2;
             this.gameObject.pos.y = height/2;
-            collider.vel.y = 0;
+            this.collider.vel.y = 0;
         }
 
         if (this.grounded)
@@ -47,22 +24,44 @@ class Player extends Component{
 
         if (Input.keyJustPressed("w")&& jumpAmount <= 1) {
             
-            collider.vel.y = -10*60;
+            this.collider.vel.y = -10*60;
             jumpAmount = jumpAmount + 1;
         }
 
         if (Input.keyPressed("a"))
-            collider.vel.x = -5*60;
+            this.collider.vel.x = -5*60;
 
         else if (Input.keyPressed("d"))
-            collider.vel.x = 5*60;
+            this.collider.vel.x = 5*60;
         else
-            collider.vel.x = 0;
+            this.collider.vel.x = 0;
 
         
     }
-}
 
+    onCollisionEnter(col) {
+
+        if (col.normal.y == -1) {
+
+            if (col.collider.getComponent(Enemy)) {
+                console.log("x");
+                this.collider.vel.y = -10*60;
+
+                col.collider.gameObject.destroy();
+                return;
+            }
+
+            this.grounded = true;
+        
+        }
+    }
+
+    onCollisionExit(col) {
+        if (col.normal.y == -1) {
+            this.grounded = false;
+        }
+    }
+}
 class Enemy extends Component{
     
     start() {
@@ -132,6 +131,11 @@ function setup() {
     .addComponent(new Rect(100, 30).setColor(122, 0, 0).setStroke())
     .addComponent(new ShapeRenderer())
     .addComponent(new Rigidbody(0))
+
+    //new GameObject(-width, height-200)
+    //.addComponent(new Circle(1).setColor(122, 0, 122))
+    //.addComponent(new ShapeRenderer())
+    //.addComponent(new Rigidbody(1))
 
     killBox = new GameObject(width/2, height*5)
     // .addComponent(new Rect(width*10, 30))
