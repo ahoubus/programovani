@@ -17,9 +17,28 @@
             Console.WriteLine($"The text has {count} words.");
         }
 
+        bool isSpace(char c) {
+            return char.IsWhiteSpace(c) || c is ',' or '.';
+        }
+
         public int CountWords(string text)
         {
-            return 0;
+            int words = 0;
+            int state = 0;
+
+            foreach (char c in text)
+            {
+                if (state == 0) {
+                    if (isSpace(c)) state = 0;
+                    else {state = 1; words++;}
+                }
+                else {
+                    if (isSpace(c)) state = 0;
+                    else state = 2;
+                }
+            }
+
+            return words;
         }
     }
 }
