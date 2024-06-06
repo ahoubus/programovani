@@ -7,10 +7,16 @@ namespace Maze
 {
     public class Game : Microsoft.Xna.Framework.Game
     {
+        public const int CellSize = 20;
+
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
         private Texture2D texture;
+
+        Cell[,] maze;
+
+        int width, height;
 
         public Game()
         {
@@ -25,6 +31,27 @@ namespace Maze
 
             texture = new Texture2D(GraphicsDevice, 1, 1);
             texture.SetData(new Color[] { Color.White });
+
+            width = GraphicsDevice.Viewport.Width;
+            height = GraphicsDevice.Viewport.Height;
+            maze = new Cell[width / CellSize, height / CellSize];
+            for (int i = 0; i < maze.GetLength(0); i++)
+            {
+                for (int j = 0; j < maze.GetLength(1); j++)
+                {
+                    maze[i, j] = new Cell(maze, i, j);
+                }
+                
+            }
+
+            Cell current = maze[0, 0];
+            current.visited = true;
+            while (true) {
+                Cell neighbor = current.GetNeighbour();
+                if (neighbor == null) break;
+                neighbor.visited = true;
+                current = neighbor;
+            }
 
             base.Initialize();
         }
@@ -52,16 +79,24 @@ namespace Maze
 
             _spriteBatch.Begin();
 
-            DrawRect(100, 100, 200, 50);
+             for (int i = 0; i < maze.GetLength(0); i++)
+            {
+                for (int j = 0; j < maze.GetLength(1); j++)
+                {
+                    maze[i, j].Draw(this);
+                }
+                
+            }
 
             _spriteBatch.End();
 
             base.Draw(gameTime);
         }
 
+        public Color color = Color.Black;
         public void DrawRect(int x, int y, int width, int height)
         {
-            _spriteBatch.Draw(texture, new Rectangle(x, y, width, height), Color.Black);
+            _spriteBatch.Draw(texture, new Rectangle(x, y, width, height), color);
         }
     }
 }
