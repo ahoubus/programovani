@@ -11,6 +11,8 @@ namespace WireWorld
 
         private Texture2D texture;
 
+        CellType[,] cells;
+
         public Game()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -24,6 +26,10 @@ namespace WireWorld
             texture.SetData(new Color[] { Color.White });
 
             // TODO: Add your initialization logic here
+            cells = new CellType[40, 24];
+            cells[2, 3] = CellType.Wire;
+            cells[3, 2] = CellType.Head;
+            cells[5, 5] = CellType.Tail;
 
             base.Initialize();
         }
@@ -50,8 +56,31 @@ namespace WireWorld
             GraphicsDevice.Clear(Color.CornflowerBlue);
             _spriteBatch.Begin();
 
-            fill = Color.Yellow;
-            DrawRect(100, 100, 200, 50);
+            fill = Color.Black;
+            //DrawRect(100, 100, 200, 50);
+
+            for (int i = 0; i < 40; i++)
+            {
+                for (int j = 0; j < 24; j++)
+                {
+                    if (cells[i, j] == CellType.Empty) {
+                        fill = Color.Black;
+                    }
+                    else if (cells[i, j] == CellType.Wire) {
+                        fill = Color.White;
+                    }
+                    else if (cells[i, j] == CellType.Head) {
+                        fill = Color.Gold;
+                    }
+                    else if (cells[i, j] == CellType.Tail) {
+                        fill = Color.DarkGoldenrod;
+                    }
+                    DrawRect(i * 20, j * 20, 20, 20);
+                }
+            }
+
+
+
 
             // TODO: Add your drawing code here
 
@@ -63,8 +92,8 @@ namespace WireWorld
         public static Color stroke = Color.Black;
         public void DrawRect(int x, int y, int width, int height)
         {
-            _spriteBatch.Draw(texture, new Rectangle(x, y, width, height), stroke);
-            _spriteBatch.Draw(texture, new Rectangle(x + 1, y + 1, width - 2, height - 2), fill);
+            _spriteBatch.Draw(texture, new Rectangle(x, y, width, height), fill);
+            // _spriteBatch.Draw(texture, new Rectangle(x + 1, y + 1, width - 2, height - 2), fill);
         }
     }
 }

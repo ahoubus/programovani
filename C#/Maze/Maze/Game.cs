@@ -1,6 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.IO;
 
 namespace Maze
@@ -15,6 +18,8 @@ namespace Maze
         private Texture2D texture;
 
         Cell[,] maze;
+        Stack<Cell> stack = new();
+        public Cell current;
 
         int width, height;
 
@@ -41,17 +46,28 @@ namespace Maze
                 {
                     maze[i, j] = new Cell(maze, i, j);
                 }
-                
+
             }
 
-            Cell current = maze[0, 0];
+            current = maze[0, 0];
             current.visited = true;
-            while (true) {
-                Cell neighbor = current.GetNeighbour();
-                if (neighbor == null) break;
-                neighbor.visited = true;
-                current = neighbor;
-            }
+            // while (true)
+            // {
+            //     Cell neighbor = current.GetNeighbour();
+            //     if (neighbor != null) {
+            //         neighbor.visited = true;
+            //         current.BreakWall(neighbor);
+            //         stack.Push(neighbor);
+            //         current = neighbor;
+            //     }
+            //     else if (stack.Count > 0) {
+            //         current = stack.Pop();
+            //     }
+            //     else
+            //     {
+            //         break;
+            //     }
+            // }
 
             base.Initialize();
         }
@@ -68,7 +84,20 @@ namespace Maze
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            Cell neighbor = current.GetNeighbour();
+            if (neighbor != null) {
+                neighbor.visited = true;
+                current.BreakWall(neighbor);
+                stack.Push(neighbor);
+                current = neighbor;
+            }
+            else if (stack.Count > 0) {
+                current = stack.Pop();
+            }
+            else
+            {
+                
+            }
 
             base.Update(gameTime);
         }
@@ -79,13 +108,13 @@ namespace Maze
 
             _spriteBatch.Begin();
 
-             for (int i = 0; i < maze.GetLength(0); i++)
+            for (int i = 0; i < maze.GetLength(0); i++)
             {
                 for (int j = 0; j < maze.GetLength(1); j++)
                 {
                     maze[i, j].Draw(this);
                 }
-                
+
             }
 
             _spriteBatch.End();
