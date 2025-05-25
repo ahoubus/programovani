@@ -1,0 +1,41 @@
+class_name Purple_sword
+
+extends Area2D
+
+var swinging = false
+var range = 25
+var parry_speed = 0.5
+@onready var animation = $AnimationPlayer
+var player: Player
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	player = Player.instance
+	hide()
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	if swinging == false:
+		if Input.is_action_pressed("purple_swing"):
+			position = -(player.position - get_global_mouse_position()).normalized() * range
+			rotation = global_position.angle_to_point(get_global_mouse_position()) + PI / 2
+			show()
+			$P_swing_timer.start()
+			$Parry_speed_timer.start()
+			animation.play("P_slash")
+			swinging = true
+
+
+func _on_p_swing_timer_timeout() -> void:
+	hide()
+	position = Vector2.ONE * 9999999
+
+
+func _on_body_entered(body: Node2D) -> void:
+	if body is Bullet:
+		swinging = false
+
+
+func _on_parry_speed_timer_timeout() -> void:
+	swinging = false
