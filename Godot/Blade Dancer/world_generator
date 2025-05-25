@@ -1,0 +1,52 @@
+extends TileMap
+
+@export var size := Vector2i(64, 64)
+@export var initial_chance := 0.4
+
+var shooter := preload("res://shooter.tscn")
+var bullet := preload("res://bullet.tscn")
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	
+	var grid = []
+	for x in range(size.x):
+		grid.append([])
+		for y in range(size.y):
+			grid[x].append(1 if randf() < initial_chance else 0)
+	
+	for _i in range(5):
+		var newGrid = []
+		for x in range(size.x):
+			newGrid.append([])
+			for y in range(size.y):
+				var neighbors = 0
+				
+				for i in range(-1, 2):
+					for j in range(-1, 2):
+						var neighbor = 1
+						if x+i < 0 or y+j < 0 or x+i >= size.x or y+j >= size.y: neighbor = 10
+						else: neighbor = grid[x+i][y+j]
+						neighbors += neighbor
+				
+				var newVal = 1 if neighbors > 4 else 0
+				newGrid[x].append(newVal)
+		grid = newGrid
+	
+	for x in range(size.x):
+		for y in range(size.y):
+			if grid[x][y] == 1:
+				set_cell(0, Vector2i(x, y), 2, Vector2i.ZERO)
+	
+	for i in range(10):
+		shooter_spawn()
+
+func shooter_spawn():
+	var instance = shooter.instantiate()
+	var size = self.size * tile_set.tile_size * Vector2i(scale)
+	instance.position = Vector2(randf_range(0, size.x), randf_range(0, size.y))
+	get_tree().root.add_child.call_deferred(instance)
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
