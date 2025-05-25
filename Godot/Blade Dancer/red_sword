@@ -1,0 +1,36 @@
+class_name Red_sword
+
+extends Area2D
+
+var swinging = false
+@export var range = 25
+@export var attack_speed = 0.5
+@onready var animation = $AnimationPlayer
+var player: Player
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	player = Player.instance
+	hide()
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	if swinging == false:
+		if Input.is_action_pressed("red_swing"):
+			position = -(player.position - get_global_mouse_position()).normalized() * range
+			rotation = global_position.angle_to_point(get_global_mouse_position()) + PI / 2
+			show()
+			$R_swing_timer.start()
+			$Attack_speed_timer.start()
+			animation.play("R_slash")
+			swinging = true
+
+
+func _on_r_swing_timer_timeout() -> void:
+	hide()
+	position = Vector2.ONE * 9999999
+
+
+func _on_attack_speed_timer_timeout() -> void:
+	swinging = false
